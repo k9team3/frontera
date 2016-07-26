@@ -3,8 +3,10 @@ from frontera.settings import Settings
 from frontera.contrib.messagebus.zeromq import MessageBus as ZeroMQMessageBus
 from frontera.contrib.messagebus.kafkabus import MessageBus as KafkaMessageBus
 from frontera.utils.fingerprint import sha1
+from kafka import KafkaClient
 from random import randint
 from time import sleep
+import logging
 
 
 class MessageBusTester(object):
@@ -102,19 +104,18 @@ def test_zmq_message_bus():
     assert tester.spider_feed_activity() == 128
 
 
-def test_kafka_message_bus_integration(self):
-    """
-    Test MessageBus with default settings, IPv6 and Star as ZMQ_ADDRESS
-    """
-    self.client.ensure_topic_exists("frontier-todo")
-    self.client.ensure_topic_exists("frontier-done")
-    self.client.ensure_topic_exists("frontier-score")
+def test_kafka_message_bus_integration():
+    kafka_location = "127.0.0.1:9092"
+    client = KafkaClient(kafka_location)
+    client.ensure_topic_exists("frontier-todo")
+    client.ensure_topic_exists("frontier-done")
+    client.ensure_topic_exists("frontier-score")
 
-    #logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.INFO)
     #kafkabus = logging.getLogger("kafkabus")
     #kafkabus.addHandler(logging.StreamHandler())
     settings = Settings()
-    settings.set('KAFKA_LOCATION', '%s:%s' % ("127.0.0.1", "9092"))
+    settings.set('KAFKA_LOCATION', kafka_location)
     settings.set('FRONTIER_GROUP', 'frontier2')
     settings.set('SCORING_TOPIC', "frontier-score")
     tester = MessageBusTester(KafkaMessageBus, settings)
