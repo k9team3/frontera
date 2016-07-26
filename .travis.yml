@@ -3,7 +3,7 @@ python: 2.7
 
 env:
   global:
-    - DOCKER_COMPOSE_VERSION=1.7.1
+    - DOCKER_COMPOSE_VERSION=1.6.2
   matrix:
     - TOXENV=py27
     - TOXENV=flake8
