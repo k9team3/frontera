@@ -30,7 +30,7 @@ before_script:
 #  - tests/run_zmq_broker.sh
   - docker --version
   - docker-compose --version
-  - docker-compose -f tests/kafka/docker-compose.yml up -d
+  - docker-compose --verbose -f tests/kafka/docker-compose.yml up -d
   - docker ps -a
 
 script: tox
