@@ -4,6 +4,7 @@ python: 2.7
 env:
   - TOXENV=py27
   - TOXENV=flake8
+    DOCKER_COMPOSE_VERSION: 1.7.1
 
 services:
   - docker
@@ -13,6 +14,12 @@ services:
 install:
   - pip install -U tox wheel codecov
   - pip install -r requirements/tests.txt
+
+before_install:
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
 
 before_script:
 #  - mysql -u root -e "set global innodb_large_prefix=1;"
